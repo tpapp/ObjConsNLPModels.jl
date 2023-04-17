@@ -1,7 +1,7 @@
 # see https://juliadocs.github.io/Documenter.jl/dev/man/hosting/#GitHub-Actions
 # uncomment file below once you set up authentication as described in the Documenter manual
 
-name: Documentation
+# name: Documentation
 
 # on:
 #   push:
