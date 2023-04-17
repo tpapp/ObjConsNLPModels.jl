@@ -12,7 +12,7 @@ NLPModels = "a4795742-8479-5a88-8948-cc11e1c8c1a6"
 SimpleUnPack = "ce78b400-467f-4804-87d8-8f486da07d0a"
 
 [compat]
-julia = "1"
+julia = "1.6"
 
 [extras]
 NLPModelsTest = "7998695d-6960-4d3a-85c4-e1bceb8cd856"
