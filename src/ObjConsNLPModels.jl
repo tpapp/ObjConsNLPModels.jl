@@ -162,11 +162,16 @@ function NLPModels.cons!(model::ObjConsNLPModel, x::AbstractVector, buffer::Abst
 end
 
 function NLPModels.objcons(model::ObjConsNLPModel, x::AbstractVector)
-    copy(objcons_at_point(model, x).objcons)
+    objcons = objcons_at_point(model, x).objcons
+    obj = first(objcons)
+    cons = objcons[(begin+1):end]
+    obj, cons
 end
 
 function NLPModels.objcons!(model::ObjConsNLPModel, x::AbstractVector, buffer::AbstractVector)
-    copy!(buffer, objcons_at_point(model, x).objcons)
+    objcons = objcons_at_point(model, x).objcons
+    copy!(buffer, @view objcons[(begin+1):end])
+    first(objcons), buffer
 end
 
 function NLPModels.grad(model::ObjConsNLPModel, x::AbstractVector)
@@ -174,6 +179,7 @@ function NLPModels.grad(model::ObjConsNLPModel, x::AbstractVector)
 end
 
 function NLPModels.grad!(model::ObjConsNLPModel, x::AbstractVector, buffer::AbstractVector)
+    @lencheck get_nvar(model) buffer
     copy!(buffer, @view objcons_at_point(model, x).objcons_jacobian[1, :])
 end
 
@@ -198,10 +204,12 @@ function NLPModels.jtprod!(model::ObjConsNLPModel, x::AbstractVector, v::Abstrac
 end
 
 function NLPModels.hprod!(model::ObjConsNLPModel, x::AbstractVector, v::AbstractVector, Hv::AbstractVector; obj_weight = 1.0)
+    @lencheck get_nvar(model) x v Hv
     mul!(Hv, hessian_at_point(model, x), v, obj_weight, 0.0)
 end
 
 function NLPModels.hprod!(model::ObjConsNLPModel, x::AbstractVector, y::AbstractVector, v::AbstractVector, Hv::AbstractVector; obj_weight = 1.0)
+    @lencheck get_nvar(model) x y v Hv
     @unpack objcons_function = model
     function f(x)
         oc = objcons_function(x)

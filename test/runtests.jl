@@ -2,7 +2,7 @@ using ObjConsNLPModels
 using Test
 using Percival
 using NLPModels
-using NLPModelsTest
+# using NLPModelsTest
 
 model = objcons_nlpmodel(x -> [sum(abs2, x), sum(x) - 1]; x0 = [2.0, 2.0])
 @test get_nvar(model) == 2
@@ -14,6 +14,10 @@ x = rand(2)
 v = rand(2)
 @test jprod(model, x, v) == [sum(v)]
 
-# NLPModelsTest.check_nlp_dimensions(model)
+output = percival(model)
+@test output.status == :first_order
+@test output.solution ≈ [0.5, 0.5]
+@test output.objective ≈ 0.5
 
-# output = percival(model)
+# NOTE: checks below are WIP, just implemented what is needed for Percival
+# NLPModelsTest.check_nlp_dimensions(model)
