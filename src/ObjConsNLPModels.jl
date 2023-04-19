@@ -23,7 +23,7 @@ import DiffResults
 using DocStringExtensions: SIGNATURES, FIELDS
 import ForwardDiff
 using LinearAlgebra: mul!, dot
-using NLPModels: NLPModels, AbstractNLPModel, Counters, NLPModelMeta, get_nvar, DimensionError, @lencheck
+using NLPModels: NLPModels, AbstractNLPModel, Counters, NLPModelMeta, get_nvar, get_ncon, DimensionError, @lencheck
 using SimpleUnPack: @unpack
 using SparseDiffTools: JacVec, HesVec
 
@@ -209,7 +209,8 @@ function NLPModels.hprod!(model::ObjConsNLPModel, x::AbstractVector, v::Abstract
 end
 
 function NLPModels.hprod!(model::ObjConsNLPModel, x::AbstractVector, y::AbstractVector, v::AbstractVector, Hv::AbstractVector; obj_weight = 1.0)
-    @lencheck get_nvar(model) x y v Hv
+    @lencheck get_nvar(model) x v Hv
+    @lencheck get_ncon(model) y
     @unpack objcons_function = model
     function f(x)
         oc = objcons_function(x)
