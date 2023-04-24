@@ -14,6 +14,7 @@ SimpleUnPack = "ce78b400-467f-4804-87d8-8f486da07d0a"
 SparseDiffTools = "47a9eef4-7e08-11e9-0b38-333d64bd3804"
 
 [compat]
+DiffResults = "1"
 julia = "1.6"
 
 [extras]
