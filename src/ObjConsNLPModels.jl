@@ -32,7 +32,7 @@ using SparseDiffTools: JacVec, HesVec
 ####
 
 Base.@kwdef struct EvaluationCache{T,S}
-    "cache of evaluations"
+    "cache of evaluations, indexed"
     evaluations::Dict{T,Pair{Int,S}}
     "last evaluation index, for caching"
     last_index::Base.RefValue{Int}
@@ -55,7 +55,7 @@ function ensure_evaluated!(f::F, cache::EvaluationCache{T,S}, x::T) where {F,T,S
         last_index[] += 1
         if length(evaluations) > max_size # compact cache
             keep_index = last_index[] - min_size
-            filter!(entry -> entry.index ≥ keep_index, evaluations)
+            filter!(((_, (index, _)),) -> index ≥ keep_index, evaluations)
         end
         last_index[] => convert(S, y)::S
     end
@@ -99,7 +99,8 @@ $(SIGNATURES)
 
 Create an `AbstractNLPModel` where `objcons_function` returns `[objective, constraints...]`.
 """
-function objcons_nlpmodel(objcons_function; x0::AbstractVector, lvar = fill(-Inf, length(x0)), uvar = fill(Inf, length(x0)),
+function objcons_nlpmodel(objcons_function; x0::AbstractVector,
+                          lvar = fill(-Inf, length(x0)), uvar = fill(Inf, length(x0)),
                           min_cache_size = 200, max_cache_size = 500)
     @argcheck all(isfinite, x0) "Initial guess should be finite."
     nvar = length(x0)
