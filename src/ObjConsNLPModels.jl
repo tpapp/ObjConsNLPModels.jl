@@ -122,9 +122,11 @@ calculating as necessary. Internal.
 """
 function objcons_at_point(model::ObjConsNLPModel, x::Vector)
     @unpack meta, objcons_function, objcons_cache = model
-    @argcheck length(x) == get_nvar(meta) DimensionError("x", get_nvar(meta), length(x))
+    n = get_nvar(meta)
+    m = get_ncon(meta) + 1
+    @argcheck length(x) == get_nvar(meta) DimensionError("x", n, length(x))
     ensure_evaluated!(objcons_cache, x) do x
-        AD_result = DiffResults.JacobianResult(x)
+        AD_result = DiffResults.DiffResult(similar(x, m), similar(x, m, n))
         ForwardDiff.jacobian!(AD_result, objcons_function, x)
         objcons = DiffResults.value(AD_result)
         objcons_jacobian = DiffResults.jacobian(AD_result)
