@@ -36,6 +36,11 @@ end
     @test output.status == :first_order
     @test output.solution ≈ ones(3) ./ 3
     @test output.objective ≈ 1 / 3 atol = 1e-5
+
+    # just do a lot of evaluations to trigger cache cleaning
+    for _ in 1:10000
+        @test isfinite(obj(model, randn(3)))
+    end
 end
 
 # NOTE: checks below are WIP, just implemented what is needed for Percival

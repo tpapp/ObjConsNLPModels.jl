@@ -1,7 +1,7 @@
 name = "ObjConsNLPModels"
 uuid = "a7a71e66-9295-4c47-9853-dcf21ad69f4a"
 authors = ["Tamás K. Papp <tkpapp@gmail.com>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 ArgCheck = "dce04be8-c92d-5529-be00-80e4d2c0e197"
