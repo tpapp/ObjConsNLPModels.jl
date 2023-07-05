@@ -15,6 +15,13 @@ SparseDiffTools = "47a9eef4-7e08-11e9-0b38-333d64bd3804"
 
 [compat]
 julia = "1.6"
+ArgCheck = "2"
+DiffResults = "1"
+DocStringExtensions = "0.9"
+ForwardDiff = "0.10"
+NLPModels = "0.20"
+SimpleUnPack = "1"
+SparseDiffTools = "2"
 
 [extras]
 NLPModelsTest = "7998695d-6960-4d3a-85c4-e1bceb8cd856"
