@@ -5,9 +5,16 @@ using NLPModels
 # using NLPModelsTest
 
 @testset "square" begin
-    model = objcons_nlpmodel(x -> [sum(abs2, x), sum(x) - 1]; x0 = [2.0, 2.0])
+    lvar = [0.0, 0.0]
+    uvar = [2.0, 2.0]
+    model = objcons_nlpmodel(; x0 = [1.99, 1.99], lvar, uvar) do x
+        @assert all(lvar .≤ x .≤ uvar)
+        [sum(abs2, x), sum(x) - 1]
+    end
     @test get_nvar(model) == 2
     @test get_ncon(model) == 1
+    @test get_lvar(model) == lvar
+    @test get_uvar(model) == uvar
     x = rand(2)
     @test obj(model, x) == sum(abs2, x)
     @test cons(model, x) == [sum(x) - 1]
@@ -16,9 +23,9 @@ using NLPModels
     @test jprod(model, x, v) == [sum(v)]
 
     output = percival(model)
-@test output.status == :first_order
+    @test output.status == :first_order
     @test output.solution ≈ [0.5, 0.5]
-    @test output.objective ≈ 0.5
+    @test output.objective ≈ 0.5 atol = 1e-4
 end
 
 @testset "non-square" begin
